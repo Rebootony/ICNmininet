@@ -40,7 +40,9 @@ class MyTopo( Topo ):
         r9 = self.addSwitch( 'r9' )
 
         # Add links
-        self.addLink( r0, r1 )  #
+        self.addLink( r0, r1 )
+        #self.addLink( r0, r1, bw=1000)
+        #node_a node_b bw in Mbps, delay '100us', loss %
 
         # Left half
         self.addLink( r0, r2 )  #
@@ -53,6 +55,9 @@ class MyTopo( Topo ):
         self.addLink( r1, r7 )  #
         self.addLink( r1, r8 )
         self.addLink( r1, r9 )
+
+        #r1.cmd(bool; operation; operation; done > /tmp/...out)
+
 
 
 topos = { 'mytopo': ( lambda: MyTopo() ) }
