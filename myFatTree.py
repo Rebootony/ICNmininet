@@ -35,17 +35,22 @@ def runNetwork():
     info('*** Adding Core routers ***\n')
     info('----------------------\n')
     corerouters = {}
-    for x in range(1, core+1):
+    for x in range(0, core):
         corerouters[x] = net.addHost('cr'+str(x), cls=LinuxRouter)
     info('adding aggregate routers\n')
     aggrouters = {}
-    for x in range(1,(core * 2) +1):
+    for x in range(0,(core * 2)):
         aggrouters[x] = net.addHost('ar'+str(x), cls=LinuxRouter)
 
     info('adding edge routers\n')
     edgerouters = {}
-    for x in range(1, (core *2)+1):
+    for x in range(0, (core *2)):
         edgerouters[x] = net.addHost('er'+str(x), cls=LinuxRouter)
+    info('adding hosts\n')
+    hosts = {}
+    for x in range (0, (core*8)):
+        hosts[x] = net.addHost('h'+str(x))
+
     info('*** Adding links to construct topology ***\n')
     info('------------------------------------------\n')
     info('*********************************************************\n')
@@ -58,19 +63,23 @@ def runNetwork():
     info('*********************************************************\n')
 
     info('adding links to core routers\n')
-    for x in range(1,core*2, 2):
+    for x in range(0,core*2, 2):
+        net.addLink(corerouters[0], aggrouters[x])
         net.addLink(corerouters[1], aggrouters[x])
+    for x in range(1, core*2, 2):
         net.addLink(corerouters[2], aggrouters[x])
-    for x in range(2, core*2, 2):
         net.addLink(corerouters[3], aggrouters[x])
-        net.addLink(corerouters[4], aggrouters[x])
     info('adding links to aggregate routers\n')
-    for x in range(1, (core*2)+1, 2):
+    for x in range(0, (core*2), 2):
         net.addLink(aggrouters[x], edgerouters[x])
         net.addLink(aggrouters[x], edgerouters[x+1])
-    for x in range(2, (core*2)+1, 2):
+    for x in range(1, (core*2), 2):
         net.addLink(aggrouters[x], edgerouters[x])
         net.addLink(aggrouters[x], edgerouters[x-1])
+    for x in range(0, (core*2)):
+        for j in range(0, core):
+            i = (x*core)+j
+            net.addLink(edgerouters[x], hosts[i])
 
 
     net.build()
