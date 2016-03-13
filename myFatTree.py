@@ -66,8 +66,8 @@ def runNetwork():
 
     info('*** Adding links to core routers                      ***\n')
     for x in range(0,core*2, 2):
-        net.addLink(corerouters[0], aggrouters[x], params1={'ip': '10.{}.2.2/24'.format(x)}, params2={'ip': '10.{}.2.3/24'.format(x)})
-        net.addLink(corerouters[1], aggrouters[x], params1={'ip': '10.{}.3.2/24'.format(x)}, params2={'ip': '10.{}.3.3/24'.format(x)})
+        net.addLink(corerouters[0], aggrouters[x],params1={'ip': '10.{}.2.2/24'.format(x)}, params2={'ip': '10.{}.2.3/24'.format(x)})
+        net.addLink(corerouters[1], aggrouters[x],params1={'ip': '10.{}.3.2/24'.format(x)}, params2={'ip': '10.{}.3.3/24'.format(x)})
         #using 10.X.3.0/24 for the default IP
     for x in range(1, core*2, 2):
         net.addLink(corerouters[2], aggrouters[x], params1={'ip': '10.{}.4.2/24'.format(x)}, params2={'ip': '10.{}.4.3/24'.format(x)})
@@ -76,17 +76,48 @@ def runNetwork():
     for x in range(0, (core*2), 2):
         net.addLink(aggrouters[x], edgerouters[x], params1={'ip': '10.{}.6.2/24'.format(x)}, params2={'ip': '10.{}.6.3/24'.format(x)})
         net.addLink(aggrouters[x], edgerouters[x+1], params1={'ip': '10.{}.7.2/24'.format(x)}, params2={'ip': '10.{}.7.3/24'.format(x)})
+
     for x in range(1, (core*2), 2):
         net.addLink(aggrouters[x], edgerouters[x], params1={'ip': '10.{}.8.2/24'.format(x)}, params2={'ip': '10.{}.8.3/24'.format(x)})
         net.addLink(aggrouters[x], edgerouters[x-1], params1={'ip': '10.{}.9.2/24'.format(x)}, params2={'ip': '10.{}.9.3/24'.format(x)})
+        #aggrouter[x]
+
     info('*** Adding links to host                              ***\n')
     for x in range(0, (core*2)):
         for j in range(0, core):
             i = (x*core)+j
-            net.addLink(edgerouters[x], hosts[i],params1={'ip': '10.{}.101.2/24'.format(x)}, params2={'ip': '10.{}.101.3/24'.format(x)})
+            net.addLink(edgerouters[x], hosts[i])
 
 
     net.build()
+    for x in range(0, (core*2), 2):
+        aggrouters[x].cmd('ip route add default via 10.{}.2.2'.format(x))
+        aggrouters[x+1].cmd('ip route add default via 10.{}.4.2'.format(x))
+    for x in range(0, (core*2), 2):
+        edgerouters[x].cmd('ip route add default via 10.{}.6.2'.format(x))
+        edgerouters[x+1].cmd('ip route add default via 10.{}.7.2'.format(x))
+
+
+    corerouters[0].cmd('ip route add 10.0.6.0/24 via 10.0.2.3')
+    corerouters[0].cmd('ip route add 10.0.7.0/24 via 10.0.2.3')
+    corerouters[0].cmd('ip route add 10.1.8.0/24 via 10.0.2.3')
+    corerouters[0].cmd('ip route add 10.1.9.0/24 via 10.0.2.3')
+    corerouters[0].cmd('ip route add 10.0.101.0/24 via 10.0.2.3')
+    corerouters[0].cmd('ip route add 10.1.101.0/24 via 10.0.2.3')
+
+    corerouters[1].cmd('ip route add 10.0.6.0/24 via 10.0.3.3')
+    corerouters[1].cmd('ip route add 10.0.7.0/24 via 10.0.3.3')
+    corerouters[1].cmd('ip route add 10.1.8.0/24 via 10.0.3.3')
+    corerouters[1].cmd('ip route add 10.1.9.0/24 via 10.0.3.3')
+    corerouters[1].cmd('ip route add 10.0.101.0/24 via 10.0.3.3')
+    corerouters[1].cmd('ip route add 10.1.101.0/24 via 10.0.3.3')
+
+
+
+
+
+
+
 
     #net.pingAll()
 
