@@ -83,10 +83,12 @@ def runNetwork():
         #aggrouter[x]
 
     info('*** Adding links to host                              ***\n')
+    k = 0
     for x in range(0, (core*2)):
         for j in range(0, core):
             i = (x*core)+j
-            net.addLink(edgerouters[x], hosts[i])
+            net.addLink(edgerouters[x], hosts[i], params1={'ip': '10.{}.101.2/24'.format(k)}, params2={'ip': '10.{}.101.3/24'.format(k)})
+            k = k +1
 
 
     net.build()
@@ -97,27 +99,108 @@ def runNetwork():
         edgerouters[x].cmd('ip route add default via 10.{}.6.2'.format(x))
         edgerouters[x+1].cmd('ip route add default via 10.{}.7.2'.format(x))
 
+    for x in range(0, 8):
+        corerouters[0].cmd('ip route add 10.{}.101.0/24 via 10.0.2.3'.format(x))
+        corerouters[1].cmd('ip route add 10.{}.101.0/24 via 10.0.3.3'.format(x))
+        corerouters[2].cmd('ip route add 10.{}.101.0/24 via 10.1.4.3'.format(x))
+        corerouters[3].cmd('ip route add 10.{}.101.0/24 via 10.1.5.3'.format(x))
+
+    for x in range(8, 16):
+        corerouters[0].cmd('ip route add 10.{}.101.0/24 via 10.2.2.3'.format(x))
+        corerouters[1].cmd('ip route add 10.{}.101.0/24 via 10.2.3.3'.format(x))
+        corerouters[2].cmd('ip route add 10.{}.101.0/24 via 10.3.4.3'.format(x))
+        corerouters[3].cmd('ip route add 10.{}.101.0/24 via 10.3.5.3'.format(x))
+
+    for x in range(16, 24):
+        corerouters[0].cmd('ip route add 10.{}.101.0/24 via 10.4.2.3'.format(x))
+        corerouters[1].cmd('ip route add 10.{}.101.0/24 via 10.4.3.3'.format(x))
+        corerouters[2].cmd('ip route add 10.{}.101.0/24 via 10.5.4.3'.format(x))
+        corerouters[3].cmd('ip route add 10.{}.101.0/24 via 10.5.5.3'.format(x))
+
+    for x in range(24, 32):
+        corerouters[0].cmd('ip route add 10.{}.101.0/24 via 10.6.2.3'.format(x))
+        corerouters[1].cmd('ip route add 10.{}.101.0/24 via 10.6.3.3'.format(x))
+        corerouters[2].cmd('ip route add 10.{}.101.0/24 via 10.7.4.3'.format(x))
+        corerouters[3].cmd('ip route add 10.{}.101.0/24 via 10.7.5.3'.format(x))
 
     corerouters[0].cmd('ip route add 10.0.6.0/24 via 10.0.2.3')
     corerouters[0].cmd('ip route add 10.0.7.0/24 via 10.0.2.3')
     corerouters[0].cmd('ip route add 10.1.8.0/24 via 10.0.2.3')
     corerouters[0].cmd('ip route add 10.1.9.0/24 via 10.0.2.3')
-    corerouters[0].cmd('ip route add 10.0.101.0/24 via 10.0.2.3')
-    corerouters[0].cmd('ip route add 10.1.101.0/24 via 10.0.2.3')
+    corerouters[0].cmd('ip route add 10.2.6.0/24 via 10.2.2.3')
+    corerouters[0].cmd('ip route add 10.2.7.0/24 via 10.2.2.3')
+    corerouters[0].cmd('ip route add 10.3.8.0/24 via 10.2.2.3')
+    corerouters[0].cmd('ip route add 10.3.9.0/24 via 10.2.2.3')
+    corerouters[0].cmd('ip route add 10.4.6.0/24 via 10.4.2.3')
+    corerouters[0].cmd('ip route add 10.4.7.0/24 via 10.4.2.3')
+    corerouters[0].cmd('ip route add 10.5.8.0/24 via 10.4.2.3')
+    corerouters[0].cmd('ip route add 10.5.9.0/24 via 10.4.2.3')
+    corerouters[0].cmd('ip route add 10.6.6.0/24 via 10.6.2.3')
+    corerouters[0].cmd('ip route add 10.6.7.0/24 via 10.6.2.3')
+    corerouters[0].cmd('ip route add 10.7.8.0/24 via 10.6.2.3')
+    corerouters[0].cmd('ip route add 10.7.9.0/24 via 10.6.2.3')
+
+
 
     corerouters[1].cmd('ip route add 10.0.6.0/24 via 10.0.3.3')
     corerouters[1].cmd('ip route add 10.0.7.0/24 via 10.0.3.3')
     corerouters[1].cmd('ip route add 10.1.8.0/24 via 10.0.3.3')
     corerouters[1].cmd('ip route add 10.1.9.0/24 via 10.0.3.3')
-    corerouters[1].cmd('ip route add 10.0.101.0/24 via 10.0.3.3')
-    corerouters[1].cmd('ip route add 10.1.101.0/24 via 10.0.3.3')
 
+    corerouters[1].cmd('ip route add 10.2.6.0/24 via 10.2.3.3')
+    corerouters[1].cmd('ip route add 10.2.7.0/24 via 10.2.3.3')
+    corerouters[1].cmd('ip route add 10.3.8.0/24 via 10.2.3.3')
+    corerouters[1].cmd('ip route add 10.3.9.0/24 via 10.2.3.3')
 
+    corerouters[1].cmd('ip route add 10.4.6.0/24 via 10.4.3.3')
+    corerouters[1].cmd('ip route add 10.4.7.0/24 via 10.4.3.3')
+    corerouters[1].cmd('ip route add 10.5.8.0/24 via 10.4.3.3')
+    corerouters[1].cmd('ip route add 10.5.9.0/24 via 10.4.3.3')
 
+    corerouters[1].cmd('ip route add 10.6.6.0/24 via 10.6.3.3')
+    corerouters[1].cmd('ip route add 10.6.7.0/24 via 10.6.3.3')
+    corerouters[1].cmd('ip route add 10.7.8.0/24 via 10.6.3.3')
+    corerouters[1].cmd('ip route add 10.7.9.0/24 via 10.6.3.3')
 
+    corerouters[2].cmd('ip route add 10.0.6.0/24 via 10.1.4.3')
+    corerouters[2].cmd('ip route add 10.0.7.0/24 via 10.1.4.3')
+    corerouters[2].cmd('ip route add 10.1.8.0/24 via 10.1.4.3')
+    corerouters[2].cmd('ip route add 10.1.9.0/24 via 10.1.4.3')
 
+    corerouters[2].cmd('ip route add 10.2.6.0/24 via 10.3.4.3')
+    corerouters[2].cmd('ip route add 10.2.7.0/24 via 10.3.4.3')
+    corerouters[2].cmd('ip route add 10.3.8.0/24 via 10.3.4.3')
+    corerouters[2].cmd('ip route add 10.3.9.0/24 via 10.3.4.3')
 
+    corerouters[2].cmd('ip route add 10.4.6.0/24 via 10.5.4.3')
+    corerouters[2].cmd('ip route add 10.4.7.0/24 via 10.5.4.3')
+    corerouters[2].cmd('ip route add 10.5.8.0/24 via 10.5.4.3')
+    corerouters[2].cmd('ip route add 10.5.9.0/24 via 10.5.4.3')
 
+    corerouters[2].cmd('ip route add 10.6.6.0/24 via 10.7.4.3')
+    corerouters[2].cmd('ip route add 10.6.7.0/24 via 10.7.4.3')
+    corerouters[2].cmd('ip route add 10.7.8.0/24 via 10.7.4.3')
+    corerouters[2].cmd('ip route add 10.7.9.0/24 via 10.7.4.3')
+
+    corerouters[3].cmd('ip route add 10.0.6.0/24 via 10.1.5.3')
+    corerouters[3].cmd('ip route add 10.0.7.0/24 via 10.1.5.3')
+    corerouters[3].cmd('ip route add 10.1.8.0/24 via 10.1.5.3')
+    corerouters[3].cmd('ip route add 10.1.9.0/24 via 10.1.5.3')
+
+    corerouters[3].cmd('ip route add 10.2.6.0/24 via 10.3.5.3')
+    corerouters[3].cmd('ip route add 10.2.7.0/24 via 10.3.5.3')
+    corerouters[3].cmd('ip route add 10.3.8.0/24 via 10.3.5.3')
+    corerouters[3].cmd('ip route add 10.3.9.0/24 via 10.3.5.3')
+
+    corerouters[3].cmd('ip route add 10.4.6.0/24 via 10.5.5.3')
+    corerouters[3].cmd('ip route add 10.4.7.0/24 via 10.5.5.3')
+    corerouters[3].cmd('ip route add 10.5.8.0/24 via 10.5.5.3')
+    corerouters[3].cmd('ip route add 10.5.9.0/24 via 10.5.5.3')
+
+    corerouters[3].cmd('ip route add 10.6.6.0/24 via 10.7.5.3')
+    corerouters[3].cmd('ip route add 10.6.7.0/24 via 10.7.5.3')
+    corerouters[3].cmd('ip route add 10.7.8.0/24 via 10.7.5.3')
+    corerouters[3].cmd('ip route add 10.7.9.0/24 via 10.7.5.3')
 
     #net.pingAll()
 
