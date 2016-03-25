@@ -4,7 +4,6 @@ from mininet.node import Node
 from mininet.log import setLogLevel, info
 from mininet.cli import CLI
 from mininet.link import Intf
-from mininet.log import setLogLevel
 from mininet.node import Controller
 from mininet.link import TCLink
 import subprocess
@@ -26,6 +25,7 @@ class POXBridge( Controller ):
 controllers = { 'poxbridge': POXBridge }
 
 class LinuxRouter( Node ):
+    """Custom Linux router for Layer 3 routing if desired in the network"""
     def config( self, **params ):
         super( LinuxRouter, self).config( **params )
         self.cmd( 'sysctl net.ipv4.ip_forward=1' )
@@ -36,30 +36,34 @@ class LinuxRouter( Node ):
 
 def runNetwork():
     """
-        This is a bare bones fat tree where all of the routers are simply switches
+        Author: Brian Lebiednik
 
+        This is a bare bones fat tree where all of the routers are simply switches
+        By using only switches we remove routing from the equation as the switches
+        can choose any path to transmit data
     """
-    net = Mininet(topo=None, build=False, ipBase='192.168.0.0/24',
+    net = Mininet(topo=None, build=False,
                 controller=POXBridge, link=TCLink)
 
     core = 4
+    switch_type = 'ovsk'
 
-    info('*** Adding Core routers ***\n')
+    info('*** Adding Core routers                              ***\n')
     info('----------------------\n')
     corerouters = {}
     for x in range(0, core):
-        corerouters[x] = net.addSwitch('cr'+str(x) , switch='ovsk')
+        corerouters[x] = net.addSwitch('cr'+str(x) , switch=switch_type)
 
 
     info('*** Adding aggregate router                       ***\n')
     aggrouters = {}
     for x in range(0,(core * 2)):
-        aggrouters[x] = net.addSwitch('ar'+str(x) , switch='ovsk' )
+        aggrouters[x] = net.addSwitch('ar'+str(x) , switch=switch_type )
 
     info('*** Adding edge routers                          ***\n' )
     edgerouters = {}
     for x in range(0, (core *2)):
-        edgerouters[x] = net.addSwitch('er'+str(x) , switch='ovsk' )
+        edgerouters[x] = net.addSwitch('er'+str(x) , switch=switch_type )
 
 
 
