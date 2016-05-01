@@ -98,7 +98,7 @@ class FacebookNoLoop(Topo):
         for x in range(0, edge_routers):
             switches[x+core_routers] = self.addSwitch('er' + str(x), switch = switch_type)
             for y in range(0, hosts_per_node):
-                hosts[(x*hosts_per_node)+y] =self.addHost('h'+str(x)+'_'+str(y))
+                hosts[(x*hosts_per_node)+y] =self.addHost('h'+str((x*hosts_per_node)+y))
                 self.addLink(hosts[(x*hosts_per_node)+y], switches[x+core_routers], bw =link_bandwidth, delay=link_delay)
         """
         *** Adding links to construct topology                ***
@@ -247,7 +247,7 @@ def perfTest():
     print "Waiting for network to converge"
     net.pingAll()
     host = {}
-    
+
     print "Starting tests"
     if (test == 'FatTreeTopoNoLoop'):
         max_host = 512
